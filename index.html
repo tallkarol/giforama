@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Its GIF not JIF</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    
+</head>
+<body>
+
+    <div class="jumbotron"><h1 class="display-2 text-center">IT'S GIF NOT JIF</h1></div>
+
+    <div class="container">
+        <div class="text-center" id="buttons-display"></div>
+    </div>
+    <br><hr style="width:75%"><br>
+    <div class="container">
+        <div id="gifs-display"></div>
+    </div>
+    
+    
+
+    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script>
+
+$(document).ready(function() {
+
+    var topics = ["cats", "dogs", "pigs", "horses"];
+
+    for (var i = 0; i < topics.length; i++) {
+        var topicBtn = $("<button>");
+        topicBtn.attr("gif-query", topics[i])
+        topicBtn.addClass("btn btn-lg gif-button").text(topics[i]);
+        $("#buttons-display").append(topicBtn)
+    }
+
+$(".gif-button").on("click", function() {
+
+alert("you clicked something")
+
+var gifQuery = $(this).attr("gif-query");
+
+var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+    gifQuery + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+console.log(queryURL)
+
+$.ajax({
+    url: queryURL,
+    method: "GET",
+}).then(function(response) {
+    var results = response.data;
+    for (var i = 0; i < results.length; i++) {
+        var gifDiv = $("<div class='card' style='width: 18rem;'>");
+        gifDiv.addClass("card")
+        var cardBody = $("<div class='card-body'>")
+        var p = $("<p class='card-text'>").text("Rating: " + results[i].rating);
+        var gifImage = $("<img class='card-img-top'>");
+        gifImage.attr("src", results[i].images.fixed_height.url);
+        gifDiv.append(gifImage);
+        gifDiv.append(cardBody);
+        cardBody.append(p);
+        $("#gifs-display").prepend(gifDiv)
+    }
+})
+
+})
+
+
+
+})
+
+</script>
+</body>
+</html>
