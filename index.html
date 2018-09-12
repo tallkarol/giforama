@@ -38,14 +38,14 @@ $(document).ready(function() {
         $("#buttons-display").append(topicBtn)
     }
 
-
-
 $(".gif-button").on("click", function() {
 
     var gifQuery = $(this).attr("gif-query");
 
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
         gifQuery + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+    $("#gifs-display").html("")
 
     console.log(queryURL)
 
@@ -55,31 +55,37 @@ $(".gif-button").on("click", function() {
     }).then(function(response) {
         var results = response.data;
         for (var i = 0; i < results.length; i++) {
-            // var gifDiv = $("<div>");
+            var gifDiv = $("<div class='card' style='width: 18rem;'>");
+            gifDiv.addClass("card")
+            var cardBody = $("<div class='card-body'>")
+            var p = $("<p class='card-text'>").text("Rating: " + results[i].rating);
             var gifImage = $("<img class='gif'>");
             gifImage.attr("src", results[i].images.fixed_height_still.url);
             gifImage.attr("data-still", results[i].images.fixed_height_still.url);
             gifImage.attr("data-animate", results[i].images.fixed_height.url);
             gifImage.attr("data-state", "still");
-            // gifDiv.append(gifImage);
-            $("#gifs-display").prepend(gifImage)
+            $("#gifs-display").append(gifDiv)
+            gifDiv.append(cardBody);
+            cardBody.append(gifImage);
+            cardBody.append(p);
+            
+            $(".gif").on("click", function() {
+                var state = $(this).attr("data-state");
+                if (state === "still") {
+                    $(this).attr("src", $(this).attr("data-animate"));
+                    $(this).attr("data-state", "animate");
+                } else {
+                    $(this).attr("src", $(this).attr("data-still"));
+                    $(this).attr("data-state", "still")
+                }
+            })
         }
     })
 })
 
 })
 
-$(".gif").on("click", function() {
-    alert("you clicked")
-    var state = $(this).attr("data-state");
-    if (state === "still") {
-        $(this).attr("src",$(this).attr("data-animate"));
-        $(this).attr("data-state", "animate");
-    } else {
-        $(this).attr("src", $(this).attr("data-still"));
-        $(this).attr("data-state", "still")
-    }
-})
+
 
 </script>
 </body>
